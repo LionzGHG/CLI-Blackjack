@@ -51,6 +51,14 @@ impl Game {
 
             if game_over.unwrap() {
                 println!("\x1b[1;31mAll players have gone bankrupt!\x1b[0m");
+                println!();
+                println!("\x1b[1;34mHands played:\x1b[0m \t{}", self.round - 1);  
+                println!();
+    
+                for (index, player) in self.players.0.iter().enumerate() {
+                    show_final_results(index, player);
+                }
+                
                 break;
             }
 
