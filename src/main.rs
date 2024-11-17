@@ -117,7 +117,7 @@ impl Game {
                         current_bet.0 = player_balance.into_chips();
                         break;
                     },
-                    "Ok" => {
+                    "Ok" | "ok" | "o" => {
                         if current_bet.sum() == 0 {
                             println!("You must place a bet!");
                             continue;
@@ -230,11 +230,10 @@ impl Game {
         dealer_hand[local.last_index() as usize] = dealer_hand.last()?.reveal();
         show_dealer_hand(&dealer_hand);
 
-        // TODO: Implement dealer logic
         println!("\x1b[1;31mDealer plays...\x1b[0m");
         
         let mut new_hand: Hand = Hand(vec![], false);
-        match dealer_logic(&mut self.deck, &mut dealer_hand, true) {
+        match dealer_logic(&mut self.deck, &mut dealer_hand, false) {
             Ok(final_hand) => {
                 println!("\x1b[1;31mDealer's final hand:\x1b[0m\t{}", final_hand);
                 new_hand = final_hand.clone();
