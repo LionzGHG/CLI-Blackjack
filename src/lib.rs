@@ -1,4 +1,6 @@
 pub mod prelude;
+#[cfg(test)]
+pub mod test;
 
 use rand::prelude::*;
 
@@ -173,7 +175,6 @@ impl Deck {
         &self.0
     }
 
-
     pub fn deal_hand(&mut self, cards: u32) -> Result<Hand, DeckError> {
         let mut hand: Vec<Card> = Vec::<Card>::new();
 
@@ -231,15 +232,6 @@ impl std::fmt::Display for Card {
             true => write!(f, "\x1b[1;32m■■\x1b[0m"),
         }
     }
-}
-
-#[test]
-fn test_hiding() {
-    let mut card: Card = Card { suit: Suit::Clubs, rank: Rank::Ace, hidden: false };
-    card.hide();
-    println!("hidden: {card}");
-    card.reveal();
-    println!("revealed: {card}");
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Eq, Ord)]
@@ -303,23 +295,6 @@ impl std::fmt::Display for Rank {
     }
 }
 
-#[test]
-fn build_deck_test() {
-    let knack_deck: Deck = Deck::build(1);
-    let poker_deck: Deck = Deck::build(2);
-
-    println!("{knack_deck}");
-    print!("\n\n");
-    println!("{poker_deck}");
-}
-
-#[test]
-fn shuffle_deck_test() {
-    let mut deck: Deck = Deck::build(1);
-    deck.shuffle();
-    println!("{deck}");
-}
-
 #[derive(Debug, Clone)]
 pub struct Bet(pub Vec<Chip>);
 
@@ -329,9 +304,10 @@ impl Bet {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum Loadout {
     Euro5,
+    CustomLoadout(Vec<Chip>),
 }
 
 #[derive(Debug, Clone)]
@@ -382,6 +358,7 @@ impl Chip {
                 Chip::C10, Chip::C10, Chip::C10, Chip::C10, Chip::C10, Chip::C10,
                 Chip::C5, Chip::C5, Chip::C5, Chip::C5, Chip::C5, Chip::C5, Chip::C5, Chip::C5
             ]),
+            Loadout::CustomLoadout(vec) => Balance(vec),
         }
     }
 

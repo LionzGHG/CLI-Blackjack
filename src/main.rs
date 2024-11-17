@@ -13,10 +13,8 @@ pub struct Game {
 }
 
 impl Game {
-    fn init_euro5_game() -> Self {
-
+    fn init_game_from(loadout: Loadout) -> Self {
         println!("\x1b[1;34m### CLI BLACKJACK ###\x1b[0m");
-        println!("Euro5 Blackjack: 5€ stakes\n");
         println!("Enter the amount of players:");
 
         let mut response: String = String::new();
@@ -24,11 +22,11 @@ impl Game {
             .read_line(&mut response)
             .expect("Failed to read line.");
 
-        let player_count: u32 = response.trim().parse().expect("Invalid player count");
+        let player_count: u32 = response.trim().parse::<u32>().expect("Invalid player count");
 
         let mut p: Vec<Player> = Vec::new();
         for i in 0..player_count {
-            p.push(Player(i, Chip::from_loadout(Loadout::Euro5), Bet(vec![]), true));
+            p.push(Player(i, Chip::from_loadout(loadout.clone()), Bet(vec![]), true));
         }
 
         Self { 
@@ -38,6 +36,10 @@ impl Game {
             round: 1,
             end_game: false
         }
+    }
+
+    fn init_euro5_game() -> Self {
+        Self::init_game_from(Loadout::Euro5)
     }
 
     fn start_game(&mut self) -> Result<(), DeckError>{
